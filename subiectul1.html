@@ -6,6 +6,16 @@
     <!-- FIX: Link-uri complete pentru ca GitHub să poată desena formulele -->
     <script src="https://jsdelivr.net"></script>
     <script type="text/javascript" async src="https://cloudflare.com"></script>
+    <!-- 1. Stilul pentru simboluri -->
+<link rel="stylesheet" href="https://jsdelivr.net">
+
+<!-- 2. Scriptul principal KaTeX -->
+<script defer src="https://jsdelivr.net"></script>
+
+<!-- 3. Scriptul care caută automat formulele în pagină și le desenează -->
+<script defer src="https://jsdelivr.net" 
+        onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}, {left: '\\(', right: '\\)', display: false}]});">
+</script>
 </head>
 <body style="font-family: sans-serif; padding: 20px; background: #f0fdf4; color: #1f2937; margin: 0;">
 
