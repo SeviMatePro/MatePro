@@ -3,91 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <title>MatePro - Subiectul I</title>
-    <!-- FIX: Link-uri complete pentru ca GitHub să poată desena formulele -->
-    <script src="https://jsdelivr.net"></script>
-    <script type="text/javascript" async src="https://cloudflare.com"></script>
-    <!-- 1. Stilul pentru simboluri -->
-<link rel="stylesheet" href="https://jsdelivr.net">
-
-<!-- 2. Scriptul principal KaTeX -->
-<script defer src="https://jsdelivr.net"></script>
-
-<!-- 3. Scriptul care caută automat formulele în pagină și le desenează -->
-<script defer src="https://jsdelivr.net" 
-        onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}, {left: '\\(', right: '\\)', display: false}]});">
-</script>
+    
+    <!-- 1. Stilul KaTeX (OBLIGATORIU) -->
+    <link rel="stylesheet" href="https://jsdelivr.net">
+    
+    <!-- 2. Scripturile KaTeX (OBLIGATORIU) -->
+    <script defer src="https://jsdelivr.net"></script>
+    <script defer src="https://jsdelivr.net" 
+        onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '\\(', right: '\\)', display: false}]});">
+    </script>
 </head>
 <body style="font-family: sans-serif; padding: 20px; background: #f0fdf4; color: #1f2937; margin: 0;">
-    <p>Rezultat: $$\sqrt{144} = 12$$</p>
 
     <div style="max-width: 800px; margin: 0 auto;">
         <h2 style="color: #166534; border-bottom: 2px solid #bbf7d0; padding-bottom: 10px;">Subiectul I - MatePro</h2>
         
-        <!-- TEST LATEX: Dacă vezi rădăcina desenată, înseamnă că MathJax funcționează! -->
+        <!-- TEST LATEX: Acum se va vedea desenat corect -->
         <div style="background: #dcfce7; padding: 10px; border-radius: 8px; margin-bottom: 20px;">
-            <strong>Test LaTeX:</strong> \( \sqrt{144} = 12 \)
+            <strong>Test LaTeX:</strong> $$\sqrt{144} = 12$$
         </div>
 
-        <div id="status" style="margin-bottom: 20px; font-style: italic; color: #666;">Se generează testul...</div>
+        <div id="status" style="margin-bottom: 20px; font-style: italic; color: #666;">Se generează testul din baza de date SQL...</div>
         
         <div id="exercitii-container"></div>
     </div>
 
     <script>
-        window.MathJax = { tex2jax: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] } };
-
-        // Datele tale de la Supabase
-        const _supabase = supabase.createClient('https://vshjbtmueeynnhumbcjk.supabase.co', 'sb_publishable_eEynhUmbCjkWIBfAlzcT-g_p3hgHzAV');
-
+        // AICI vom pune codul de legătură cu NEON SQL în pasul următor
         async function genereazaSubiect() {
             const container = document.getElementById('exercitii-container');
             const status = document.getElementById('status');
-            const pozitii = [1, 2, 3, 4, 5, 6];
             
-            try {
-                const promisiuni = pozitii.map(p => 
-                    _supabase.from('teste').select('*').like('id_intern', `A.${p}.%`)
-                );
-
-                const rezultate = await Promise.all(promisiuni);
-                container.innerHTML = ''; 
-
-                rezultate.forEach((res, index) => {
-                    if (res.data && res.data.length > 0) {
-                        const ex = res.data[Math.floor(Math.random() * res.data.length)];
-                        
-                        const card = document.createElement('div');
-                        card.style = "background:white; padding:20px; margin-bottom:20px; border-radius:12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 2px solid transparent;";
-                        
-                        card.innerHTML = `
-                            <div style="font-weight: bold; color: #059669; margin-bottom: 12px;">Exercițiul ${index + 1}</div>
-                            <div style="margin-bottom: 15px; line-height: 1.6;">${ex.enunt}</div>
-                            ${ex.imagine ? `<img src="imagini/${ex.id_intern}.png" style="max-width:100%; height:auto; margin-bottom:15px; border-radius:8px; display:block;">` : ''}
-                            
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                                <button onclick="verifica(this, '${ex.raspuns_corect}', 'a')" style="padding:12px; border:1px solid #e5e7eb; border-radius:8px; cursor:pointer; background:white; text-align:left;">A) ${ex.varianta_a}</button>
-                                <button onclick="verifica(this, '${ex.raspuns_corect}', 'b')" style="padding:12px; border:1px solid #e5e7eb; border-radius:8px; cursor:pointer; background:white; text-align:left;">B) ${ex.varianta_b}</button>
-                                <button onclick="verifica(this, '${ex.raspuns_corect}', 'c')" style="padding:12px; border:1px solid #e5e7eb; border-radius:8px; cursor:pointer; background:white; text-align:left;">C) ${ex.varianta_c}</button>
-                                <button onclick="verifica(this, '${ex.raspuns_corect}', 'd')" style="padding:12px; border:1px solid #e5e7eb; border-radius:8px; cursor:pointer; background:white; text-align:left;">D) ${ex.varianta_d}</button>
-                            </div>
-                        `;
-                        container.appendChild(card);
-                    }
-                });
-
-                status.innerText = "Subiect generat!";
-                if (window.MathJax) MathJax.Hub.Queue(["Typeset", MathJax.Hub, container]);
-
-            } catch (err) {
-                status.innerText = "Eroare la încărcarea testului.";
-            }
+            // Momentan afișăm un mesaj până legăm API-ul de la Neon
+            status.innerText = "Sistemul KaTeX este gata. Urmează conectarea la SQL.";
         }
 
         function verifica(buton, corect, ales) {
             const parinte = buton.parentElement;
             const card = parinte.parentElement;
             const butoane = parinte.querySelectorAll('button');
+            
             butoane.forEach(b => b.disabled = true);
+            
             if (ales.toLowerCase() === corect.toLowerCase()) {
                 buton.style.borderColor = "#22c55e"; 
                 buton.style.backgroundColor = "#f0fdf4";
@@ -99,7 +56,10 @@
             }
         }
 
-        genereazaSubiect();
+        // Pornim procesul la încărcare
+        window.onload = function() {
+            genereazaSubiect();
+        };
     </script>
 </body>
 </html>
