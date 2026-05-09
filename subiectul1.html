@@ -32,13 +32,49 @@
     </div>
 
     <script>
-        // AICI vom pune codul de legătură cu NEON SQL în pasul următor
-        async function genereazaSubiect() {
+       async function genereazaSubiect() {
             const container = document.getElementById('exercitii-container');
             const status = document.getElementById('status');
             
-            // Momentan afișăm un mesaj până legăm API-ul de la Neon
-            status.innerText = "Sistemul KaTeX este gata. Urmează conectarea la SQL.";
+            try {
+                // 1. Chemăm datele de pe Netlify
+                const response = await fetch('https://netlify.app');
+                const date = await response.json();
+                
+                // 2. Ascundem mesajul de încărcare
+                status.style.display = "none"; 
+                
+                // 3. Generăm automat cele 6 carduri cu exerciții
+                container.innerHTML = date.map((ex, index) => `
+                    <div style="background: white; border: 2px solid #bbf7d0; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                        <p style="font-weight: bold; color: #166534; margin-top: 0;">Exercițiul ${index + 1}:</p>
+                        <div style="font-size: 1.1em; margin-bottom: 15px;">${ex.enunt}</div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <button onclick="verifica(this, '${ex.rf}', 'A')" style="padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; cursor: pointer; background: white; font-size: 1em;">A: ${ex.varianta_a}</button>
+                            <button onclick="verifica(this, '${ex.rf}', 'B')" style="padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; cursor: pointer; background: white; font-size: 1em;">B: ${ex.varianta_b}</button>
+                            <button onclick="verifica(this, '${ex.rf}', 'C')" style="padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; cursor: pointer; background: white; font-size: 1em;">C: ${ex.varianta_c}</button>
+                            <button onclick="verifica(this, '${ex.rf}', 'D')" style="padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; cursor: pointer; background: white; font-size: 1em;">D: ${ex.varianta_d}</button>
+                        </div>
+                    </div>
+                `).join('');
+
+                // 4. ✨ ACTIVĂM KaTeX pentru noile exerciții
+                if (window.renderMathInElement) {
+                    renderMathInElement(container, {
+                        delimiters: [
+                            {left: '$$', right: '$$', display: true},
+                            {left: '$', right: '$', display: false},
+                            {left: '\\(', right: '\\)', display: false}
+                        ],
+                        throwOnError : false
+                    });
+                }
+
+            } catch (error) {
+                status.innerText = "❌ Eroare la conectare: " + error.message;
+                status.style.color = "red";
+            }
         }
 
         function verifica(buton, corect, ales) {
