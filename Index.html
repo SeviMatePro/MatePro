@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MatePro 10 - Evaluare Națională</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f8fafc; margin: 0; color: #1e293b; scroll-behavior: smooth; }
+        
+        nav { background: #2563eb; padding: 1rem 2rem; color: white; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .logo { font-size: 1.5rem; font-weight: bold; }
+        .btn-cont { background: white; color: #2563eb; border: none; padding: 0.6rem 1.2rem; border-radius: 50px; font-weight: bold; cursor: pointer; }
+
+        .container { max-width: 1100px; margin: auto; padding: 40px 20px; }
+        .hero { text-align: center; padding: 40px 0; }
+        
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            gap: 25px; 
+            margin-bottom: 60px;
+            align-items: stretch; /* Face toate cardurile de aceeași înălțime */
+        }
+        .card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 6px solid #2563eb; display: flex; flex-direction: column; justify-content: space-between; transition: 0.3s; }
+        .link-sectiune { display: block; margin-top: 20px; background: #f1f5f9; color: #2563eb; text-decoration: none; padding: 12px; border-radius: 12px; font-weight: bold; text-align: center; }
+
+        /* Sectiune Abonament */
+        .pricing { background: white; padding: 40px; border-radius: 30px; text-align: center; border: 2px solid #e2e8f0; max-width: 500px; margin: 0 auto 60px auto; }
+        .price { font-size: 2.5rem; font-weight: 800; color: #2563eb; margin: 15px 0; }
+        
+        /* NOUA SECTIUNE: RECLAMA SEDIU */
+        .sediu-promo { 
+            background: linear-gradient(135deg, #7e22ce 0%, #a855f7 100%); /* Mov electric spre lila */
+            color: white; 
+            padding: 50px; 
+            border-radius: 30px; 
+            margin-bottom: 60px; 
+            display: flex; 
+            align-items: center; 
+            flex-wrap: wrap; 
+            gap: 30px; 
+            text-align: left;
+            box-shadow: 0 15px 30px rgba(168, 85, 247, 0.3); /* Umbră mov */
+        }
+        .sediu-text h2 { color: #f0abfc; margin-top: 0; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); } /* Text titlu lila deschis */
+        .contact-info { 
+            background: rgba(255, 255, 255, 0.15); 
+            padding: 20px; 
+            border-radius: 15px; 
+            border-left: 4px solid #f0abfc; 
+            backdrop-filter: blur(5px); /* Efect de sticlă înghețată */
+        }
+        .btn-telefon { 
+            display: inline-block; 
+            background: white; 
+            color: #7e22ce; 
+            padding: 15px 25px; 
+            border-radius: 12px; 
+            text-decoration: none; 
+            font-weight: bold; 
+            margin-top: 20px; 
+            transition: 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .btn-telefon:hover { 
+            background: #f0abfc; 
+            color: white; 
+            transform: scale(1.05);
+        }
+
+        .modal { display: none; position: fixed; z-index: 200; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
+        .modal-content { background: white; margin: 10% auto; padding: 30px; width: 300px; border-radius: 20px; text-align: center; }
+        .modal-content input { width: 90%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 8px; }
+        .btn-plata { background: #1e293b; color: white; width: 100%; padding: 15px; border-radius: 12px; border: none; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">MatePro 10</div>
+        <button class="btn-cont" onclick="toggleModal()">Contul Meu</button>
+    </nav>
+
+    <div class="container">
+        <div class="hero">
+            <h1>Evaluarea Națională - Matematică</h1>
+            <p>Pregătire digitală și meditații personalizate.</p>
+        </div>
+
+        <div class="grid">
+            <div class="card" style="border-top-color: #22c55e;">
+                <h3>Subiectul I</h3>
+                <p>Algebră (Grilă). Exersezi și înveți din greșeli.</p>
+                <a href="subiectul1.html" class="link-sectiune">Începe Antrenamentul →</a>
+            </div>
+            <div class="card" style="border-top-color: #3b82f6;">
+                <h3>Subiectul II</h3>
+                <p>Geometrie (Grilă). Toate figurile de examen.</p>
+                <a href="subiectul2.html" class="link-sectiune">Vezi Probleme →</a>
+            </div>
+            <div class="card" style="border-top-color: #f59e0b;">
+                <h3>Subiectul III</h3>
+                <p>Probleme complexe cu rezolvări pe barem.</p>
+                <a href="#" class="link-sectiune">Explorează →</a>
+            </div>
+            <!-- Card Simulare Examen Complet -->
+<div class="card" style="border-top-color: #ef4444; background: #fef2f2;">
+    <div>
+        <h3 style="color: #b91c1c;">📝 Generare Test Complet</h3>
+        <p>Simulare oficială: Subiectul I, II și III. 120 de minute, exact ca la Evaluarea Națională.</p>
+    </div>
+    <a href="simulare.html" class="link-sectiune" style="color: #b91c1c; border-color: #b91c1c;">Începe Simularea →</a>
+</div>
+             <!-- Card Chestionar Formule -->
+<div class="card" style="border-top-color: #f43f5e; background: #fff1f2;">
+    <div>
+        <h3 style="color: #e11d48;">⚡ Quiz Formule</h3>
+        <p>Învață ariile, volumele și teoremele prin teste rapide de 2 minute.</p>
+    </div>
+    <a href="quiz-formule.html" class="link-sectiune" style="color: #e11d48;">Verifică-te →</a>
+</div>
+
+<!-- Card Materiale & Video -->
+<div class="card" style="border-top-color: #06b6d4; background: #ecfeff;">
+    <div>
+        <h3 style="color: #0891b2;">🎥 Lecții & PDF</h3>
+        <p>Clipuri explicative și materiale de descărcat pentru recapitulare.</p>
+    </div>
+    <a href="materiale.html" class="link-sectiune" style="color: #0891b2;">Vezi Resurse →</a>
+</div>
+        </div>
+       
+
+        <!-- RECLAMA SEDIU -->
+        <div class="sediu-promo">
+            <div class="sediu-text">
+                <h2>Vrei pregătire față în față?</h2>
+                <p>Ofer meditații personalizate la sediul meu pentru elevii care vor să aprofundeze materia într-un mod accelerat.</p>
+                <div class="contact-info">
+                    <p>📍 <strong>Locație:</strong> Str. Panait Cerna nr.10, Sector 3 Bucuresti</p>
+                    <p>📞 <strong>Telefon:</strong> 0731 731 730</p>
+                    <p>✨ Munceste! Creste! Straluceste!.</p>
+                </div>
+                <a href="tel:0700000000" class="btn-telefon">Sună pentru Detalii</a>
+            </div>
+            <div style="font-size: 80px; opacity: 0.2;">🏠</div>
+        </div>
+
+        <!-- ABONAMENT -->
+        <div class="pricing">
+            <h3>Abonament Platformă</h3>
+            <div class="price">150 RON <span>/ lună</span></div>
+            <p>Acces nelimitat la exercițiile de pe site.</p>
+            <button class="btn-plata" onclick="alert('Legătura cu banca va fi activată curând!')">Vreau să mă înscriu online</button>
+        </div>
+    </div>
+
+    <!-- MODAL LOGARE -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <h3>Autentificare</h3>
+            <input type="email" placeholder="Email-ul tău">
+            <input type="password" placeholder="Parola">
+            <button class="btn-plata" style="margin-top: 10px;" onclick="toggleModal()">Intră în cont</button>
+            <p style="font-size: 12px; margin-top: 15px; cursor: pointer; color: blue;" onclick="toggleModal()">Închide</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleModal() {
+            const modal = document.getElementById('loginModal');
+            modal.style.display = (modal.style.display === 'block') ? 'none' : 'block';
+        }
+    </script>
+
+</body>
+</html>
