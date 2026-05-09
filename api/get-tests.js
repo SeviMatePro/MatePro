@@ -1,24 +1,26 @@
-import { neon } from '@neondatabase/serverless';
+const { Client } = require('pg');
 
-export default async function handler(req, res) {
-    try {
-        // Aceasta este "țeava" care folosește DATABASE_URL din Vercel
-        const sql = neon(process.env.DATABASE_URL);
+module.exports = async (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-        // Interogarea SQL pentru cele 6 exerciții
-        const rows = await sql`
-            SELECT DISTINCT ON (split_part(id_intern, '.', 2)) 
-                id_intern, enunt, varianta_a, varianta_b, varianta_c, varianta_d, rf as raspuns_corect, imagine
-            FROM teste 
-            WHERE split_part(id_intern, '.', 1) IN ('AC', 'AI', 'AF', 'ACR')
-              AND split_part(id_intern, '.', 2) IN ('1', '2', '3', '4', '5', '6')
-            ORDER BY split_part(id_intern, '.', 2), RANDOM();
-        `;
-        
-        // Trimitem datele către site
-        res.status(200).json(rows);
-    } catch (error) {
-        console.error('Eroare detaliată:', error);
-        res.status(500).json({ error: "Eroare la conectare. Verifică DATABASE_URL." });
-    }
-}
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false }
+  });
+
+  try {
+    await client.connect();
+    const result = await client.query('SELECT * FROM teste ORDER BY RANDOM() LIMIT 6');
+    res.status(200).json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: "Eroare DB", details: err.message });
+  } finally {
+    await client.end();
+  }
+};
