@@ -1,33 +1,24 @@
+import { neon } from '@neondatabase/serverless';
+
 export default async function handler(req, res) {
-    // Luăm cheile secrete din "seiful" Vercel
-    const apiKey = process.env.NEON_API_KEY;
-    const projectId = process.env.NEON_PROJECT_ID;
-
-    // Interogarea SQL (cele 6 exerciții aleatorii)
-    const sqlQuery = `
-        SELECT DISTINCT ON (split_part(id_intern, '.', 2)) 
-            id_intern, enunt, varianta_a, varianta_b, varianta_c, varianta_d, rf as raspuns_corect, imagine
-        FROM teste 
-        WHERE split_part(id_intern, '.', 1) IN ('AC', 'AI', 'AF', 'ACR')
-          AND split_part(id_intern, '.', 2) IN ('1', '2', '3', '4', '5', '6')
-        ORDER BY split_part(id_intern, '.', 2), RANDOM();
-    `;
-
     try {
-        const response = await fetch(`https://neon.tech{projectId}/sql?database=neondb`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${apiKey}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ query: sqlQuery })
-        });
+        // Aceasta este "țeava" care folosește DATABASE_URL din Vercel
+        const sql = neon(process.env.DATABASE_URL);
 
-        const data = await response.json();
+        // Interogarea SQL pentru cele 6 exerciții
+        const rows = await sql`
+            SELECT DISTINCT ON (split_part(id_intern, '.', 2)) 
+                id_intern, enunt, varianta_a, varianta_b, varianta_c, varianta_d, rf as raspuns_corect, imagine
+            FROM teste 
+            WHERE split_part(id_intern, '.', 1) IN ('AC', 'AI', 'AF', 'ACR')
+              AND split_part(id_intern, '.', 2) IN ('1', '2', '3', '4', '5', '6')
+            ORDER BY split_part(id_intern, '.', 2), RANDOM();
+        `;
         
-        // Trimitem datele înapoi către site-ul tău
-        res.status(200).json(data.rows);
+        // Trimitem datele către site
+        res.status(200).json(rows);
     } catch (error) {
-        res.status(500).json({ error: "Eroare la conectarea cu Neon" });
+        console.error('Eroare detaliată:', error);
+        res.status(500).json({ error: "Eroare la conectare. Verifică DATABASE_URL." });
     }
 }
