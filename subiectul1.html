@@ -39,7 +39,7 @@ async function genereazaSubiect() {
         status.style.color = "black";
 
         // ✅ URL-ul tău complet este salvat aici în siguranță:
-        const response = await fetch('netlify.app');
+        const response = await fetch('https://matepro10.netlify.app/.netlify/functions/get-tests');
         const toateDatele = await response.json();
         
         // Filtrare după valoarea S1
