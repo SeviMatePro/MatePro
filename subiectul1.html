@@ -41,7 +41,7 @@ async function genereazaSubiect() {
         status.style.color = "black";
 
         // URL-ul tău complet restaurat
-        const response = await fetch('netlify.app');
+        const response = await fetch('https://matepro10.netlify.app/.netlify/functions/get-tests');
         const toateDatele = await response.json();
         
         // 1. FILTRARE STRICTĂ: Selectăm doar exercițiile unde coloana 'subiect' are valoarea 'S1'
