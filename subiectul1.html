@@ -24,7 +24,7 @@
     </div>
 
     <script>
-     // Variabilă globală pentru a stoca doar exercițiile selectate pentru testul curent
+    // Variabilă globală pentru a stoca doar cele 6 exerciții alese pentru testul curent
 let exercitiiTestSelectate = [];
 
 async function genereazaSubiect() {
@@ -43,35 +43,28 @@ async function genereazaSubiect() {
         const response = await fetch('https://matepro10.netlify.app/.netlify/functions/get-tests');
         const toateDatele = await response.json();
         
-        // 1. FILTRARE STRICTĂ: Doar exercițiile din categoria 'S1'
+        // 1. FILTRARE STRICTĂ PE SUBIECTUL S1
         const exercitiiS1 = toateDatele.filter(item => item.subiect === "S1");
 
-        // 2. GRUPARE DUPĂ COLOANA 'EX':
-        const grupuriDupaNumarEx = {};
-        exercitiiS1.forEach(item => {
-            const nrEx = parseInt(item.ex);
-            if (!isNaN(nrEx)) {
-                if (!grupuriDupaNumarEx[nrEx]) {
-                    grupuriDupaNumarEx[nrEx] = [];
-                }
-                grupuriDupaNumarEx[nrEx].push(item);
-            }
-        });
-
-        // 3. SELECȚIE ALEATORIE (Până la 6 exerciții diferite: Ex 1, Ex 2, Ex 3, Ex 4, Ex 5, Ex 6)
+        // 2. SELECȚIE FIXĂ ȘI ALEATORIE PENTRU FIECARE POZIȚIE (DE LA 1 LA 6)
         exercitiiTestSelectate = [];
-        const numereDisponibile = Object.keys(grupuriDupaNumarEx).map(Number).sort((a, b) => a - b);
-        const primele6Numere = numereDisponibile.slice(0, 6);
-
-        primele6Numere.forEach(nr => {
-            const listaOptiuni = grupuriDupaNumarEx[nr];
-            const alegereAleatorie = listaOptiuni[Math.floor(Math.random() * listaOptiuni.length)];
-            exercitiiTestSelectate.push(alegereAleatorie);
-        });
+        
+        for (let i = 1; i <= 6; i++) {
+            // Căutăm în baza de date doar exercițiile din S1 care au numărul corespunzător (ex: 1, 2, 3...)
+            const optiuniPentruEx = exercitiiS1.filter(item => parseInt(item.ex) === i);
+            
+            if (optiuniPentruEx.length > 0) {
+                // Dacă există opțiuni, alegem una complet aleatoriu
+                const alegereAleatorie = optiuniPentruEx[Math.floor(Math.random() * optiuniPentruEx.length)];
+                exercitiiTestSelectate.push(alegereAleatorie);
+            } else {
+                console.warn(`Nu s-a găsit niciun exercițiu în baza de date pentru S1 cu ex = ${i}`);
+            }
+        }
 
         status.style.display = "none"; 
         
-        // 4. RENDER HTML: ID-ul apare curat în paranteze, fără textul "ID Intern" în față
+        // 3. RENDER HTML: ID-ul apare curat în paranteze, fără textul "ID Intern" în față
         container.innerHTML = exercitiiTestSelectate.map((ex, index) => `
             <div class="card-exercitiu" data-index="${index}" style="background: white; border: 2px solid #bbf7d0; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: all 0.3s;">
                 <p style="font-weight: bold; color: #166534; margin-top: 0;">
@@ -108,6 +101,7 @@ async function genereazaSubiect() {
     }
 }
 
+// Permite modificarea opțiunii selectate înainte de apăsarea butonului de Verificare
 function selecteazaOptiune(buton, litera) {
     const parinte = buton.parentElement;
     const card = parinte.parentElement;
@@ -142,6 +136,7 @@ function adaugaButoaneControl() {
     container.after(zonaControl);
 }
 
+// Calculează punctajele (fără puncte din oficiu) și generează raportul curat cu numere simple (Exercițiul 1, Exercițiul 2 etc.)
 function verificaTestul() {
     const carduri = document.querySelectorAll('.card-exercitiu');
     let exercitiiGresite = [];
