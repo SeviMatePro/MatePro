@@ -21,7 +21,7 @@ exports.handler = async (event, context) => {
 
   try {
     await client.connect();
-    const result = await client.query('SELECT * FROM teste ORDER BY RANDOM() LIMIT 6');
+    const result = await client.query('SELECT * FROM teste ORDER BY RANDOM()');
     
     return {
       statusCode: 200,
